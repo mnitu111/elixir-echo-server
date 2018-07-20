@@ -4,8 +4,9 @@ defmodule Echo.Mixfile do
   def project do
     [ app: :echo,
       version: "0.0.1",
-      elixir: "~> 0.12.2",
-      deps: deps ]
+      elixir: "~> 1.6",
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
