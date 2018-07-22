@@ -29,7 +29,7 @@ node('node') {
     //                  subject: 'project build successful',
     //                  to: 'yyyyy@yyyy.com'
     //    }
-    // }
+  }
     catch (err) {
         currentBuild.result = "FAILURE"
 
