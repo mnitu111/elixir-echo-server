@@ -23,7 +23,8 @@ node {
             --publish=6000:6000 \
             scretu/elixir-echo-server:${env.BUILD_ID}"
             """
-        } catch (error) {
+        }
+        catch (error) {
           print error
           sh """
             ssh docker@${STAGE_SWARM_MANAGER} "docker service update \
@@ -31,6 +32,7 @@ node {
             ees"
             """
         }
+      }
     }
 
     stage('Production') {
