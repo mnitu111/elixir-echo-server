@@ -15,9 +15,9 @@ node {
 
     stage('Stage') {
       node {
-        label 'stage'
+        //label 'stage'
         sh """
-          docker-machine ssh stage1 "docker service create \
+          ssh -t docker@192.168.99.108 "docker service create \
           --name=ees \
           --publish=6000:6000 \
           scretu/elixir-echo-server:${env.BUILD_ID}"
