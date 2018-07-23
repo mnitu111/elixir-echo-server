@@ -39,7 +39,9 @@ node {
     stage('Production') {
       node {
         //label 'prod'
-        def userInput = input(id: 'userInput', message: 'Shall we deploy to Production?', submitter: 'admin')
+        timeout(time: 1, unit: 'HOURS') {
+          input(message: 'Shall we deploy to Production?', submitter: 'admin')
+        }
         echo "proceeding"
         // try {
         //   sh """
