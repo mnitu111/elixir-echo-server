@@ -17,7 +17,7 @@ node {
       sh '''
       docker-machine ssh stage1 "docker service create \
       --name=ees \
-      --publish=6000:6000/tcp \
+      --publish=6000:6000 \
       scretu/elixir-echo-server:${env.BUILD_ID}"
       '''
     }
