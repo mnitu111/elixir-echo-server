@@ -17,21 +17,25 @@ node {
       node {
         //label 'stage'
         sh """
-          ssh -t docker@192.168.99.108 "docker service create \
+          ssh -t docker@${STAGE_SWARM_MANAGER} "docker service create \
           --name=ees \
           --publish=6000:6000 \
           scretu/elixir-echo-server:${env.BUILD_ID}"
           """
       }
     }
-    //    stage('Deploy'){
-    //
-    //      echo 'Push to Repo'
-    //      sh './dockerPushToRepo.sh'
-    //
-    //      echo 'ssh to web server and tell it to pull new image'
-    //      sh 'ssh deploy@xxxxx.xxxxx.com running/xxxxxxx/dockerRun.sh'
-    //    }
+
+    stage('Production') {
+      node {
+        //label 'prod'
+        sh """
+          ssh -t docker@${PROD_SWARM_MANAGER} "docker service create \
+          --name=ees \
+          --publish=6000:6000 \
+          scretu/elixir-echo-server:${env.BUILD_ID}"
+          """
+      }
+    }
     //    stage('Cleanup'){
     //      echo 'prune and cleanup'
     //      sh 'npm prune'
