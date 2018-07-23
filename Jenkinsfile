@@ -39,6 +39,8 @@ node {
     stage('Production') {
       node {
         //label 'prod'
+        def userInput = input(id: 'userInput', message: 'Shall we deploy to Production?', submitter: 'admin')
+        echo "proceeding"
         // try {
         //   sh """
         //     ssh docker@${PROD_SWARM_MANAGER} "docker service create \
