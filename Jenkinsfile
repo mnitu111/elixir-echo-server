@@ -12,6 +12,13 @@ node {
         customImage.push()
       }
     }
+
+    stage('Stage') {
+      sh 'docker-machine ssh stage1 "docker service create \
+  --name=ees \
+  --publish=6000:6000/tcp \
+  scretu/elixir-echo-server:${env.BUILD_ID}"'
+    }
     //    stage('Deploy'){
     //
     //      echo 'Push to Repo'
