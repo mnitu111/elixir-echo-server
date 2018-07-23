@@ -18,7 +18,7 @@ node {
       try {
         //label 'stage'
         sh """
-          ssh docker@${STAGE_SWARM_MANAGER} "docker service create \
+          ssh -o StrictHostKeyChecking=no docker@${STAGE_SWARM_MANAGER} "docker service create \
           --name=ees \
           --publish=6000:6000 \
           scretu/elixir-echo-server:${env.BUILD_ID}"
@@ -27,7 +27,7 @@ node {
       catch (Exception e) {
         print e
         sh """
-          ssh docker@${STAGE_SWARM_MANAGER} "docker service update \
+          ssh -o StrictHostKeyChecking=no docker@${STAGE_SWARM_MANAGER} "docker service update \
           --image scretu/elixir-echo-server:${env.BUILD_ID} \
           ees"
           """
