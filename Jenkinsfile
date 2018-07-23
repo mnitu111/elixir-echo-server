@@ -7,7 +7,7 @@ node {
       checkout scm
     }
     stage('Build Docker') {
-      def customImage = docker.build("elixir-echo-server:${env.BUILD_ID}")
+      def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
       customImage.push()
     }
     //    stage('Deploy'){
@@ -29,6 +29,7 @@ node {
     //                  subject: 'project build successful',
     //                  to: 'yyyyy@yyyy.com'
     //    }
+
   }
     catch (err) {
         currentBuild.result = "FAILURE"
