@@ -24,8 +24,8 @@ node {
           scretu/elixir-echo-server:${env.BUILD_ID}"
           """
       }
-      catch (error) {
-        print error
+      catch (Exception e) {
+        print e
         sh """
           ssh docker@${STAGE_SWARM_MANAGER} "docker service update \
           --image scretu/elixir-echo-server:${env.BUILD_ID} \
