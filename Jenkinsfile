@@ -15,26 +15,40 @@ node {
 
     stage('Stage') {
       node {
-        //label 'stage'
-        sh """
-          ssh -t docker@${STAGE_SWARM_MANAGER} "docker service create \
-          --name=ees \
-          --publish=6000:6000 \
-          scretu/elixir-echo-server:${env.BUILD_ID}"
-          """
-      }
+        try {
+          //label 'stage'
+          sh """
+            ssh docker@${STAGE_SWARM_MANAGER} "docker service create \
+            --name=ees \
+            --publish=6000:6000 \
+            scretu/elixir-echo-server:${env.BUILD_ID}"
+            """
+          }
+        }
+        catch () {
+          sh """
+            ssh docker@${STAGE_SWARM_MANAGER} "docker service update \
+            --image scretu/elixir-echo-server:${env.BUILD_ID} \
+            ees"
+            """
+        }
     }
 
     stage('Production') {
       node {
         //label 'prod'
-        sh """
-          ssh -t docker@${PROD_SWARM_MANAGER} "docker service create \
-          --name=ees \
-          --publish=6000:6000 \
-          scretu/elixir-echo-server:${env.BUILD_ID}"
-          """
-      }
+        // try {
+        //   sh """
+        //     ssh docker@${PROD_SWARM_MANAGER} "docker service create \
+        //     --name=ees \
+        //     --publish=6000:6000 \
+        //     scretu/elixir-echo-server:${env.BUILD_ID}"
+        //     """
+        //   }
+        // }
+        // catch () {
+        //
+        // }
     }
     //    stage('Cleanup'){
     //      echo 'prune and cleanup'
