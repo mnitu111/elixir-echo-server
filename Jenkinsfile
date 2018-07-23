@@ -49,6 +49,7 @@ node {
         // catch () {
         //
         // }
+      }
     }
     //    stage('Cleanup'){
     //      echo 'prune and cleanup'
