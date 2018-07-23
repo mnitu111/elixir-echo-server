@@ -7,7 +7,7 @@ node {
       checkout scm
     }
     stage('Build Docker') {
-      docker.withRegistry('https://hub.docker.com/', 'dockerhub') {
+      docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub') {
         def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
         customImage.push()
       }
