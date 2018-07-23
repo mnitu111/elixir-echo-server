@@ -7,8 +7,10 @@ node {
       checkout scm
     }
     stage('Build Docker') {
-      def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
-      customImage.push()
+      docker.withRegistry('https://hub.docker.com/', 'dockerhub')
+        def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
+        customImage.push()
+      }
     }
     //    stage('Deploy'){
     //
@@ -33,13 +35,6 @@ node {
   }
     catch (err) {
         currentBuild.result = "FAILURE"
-
-            mail body: "project build error is here: ${env.BUILD_URL}" ,
-            from: 'xxxx@yyyy.com',
-            replyTo: 'yyyy@yyyy.com',
-            subject: 'project build failed',
-            to: 'zzzz@yyyyy.com'
-
         throw err
     }
 }
