@@ -23,7 +23,6 @@ node {
             --publish=6000:6000 \
             scretu/elixir-echo-server:${env.BUILD_ID}"
             """
-          }
         }
         catch () {
           sh """
