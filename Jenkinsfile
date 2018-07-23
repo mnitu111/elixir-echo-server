@@ -14,12 +14,12 @@ node {
     }
 
     stage('Stage') {
-      sh '''
+      sh """
       docker-machine ssh stage1 "docker service create \
       --name=ees \
       --publish=6000:6000 \
-      scretu/elixir-echo-server:\$\{env.BUILD_ID\}"
-      '''
+      scretu/elixir-echo-server:${env.BUILD_ID}"
+      """
     }
     //    stage('Deploy'){
     //
