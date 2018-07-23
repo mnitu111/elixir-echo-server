@@ -7,7 +7,7 @@ node {
       checkout scm
     }
     stage('Build Docker') {
-      docker.withRegistry('https://hub.docker.com/', 'dockerhub')
+      docker.withRegistry('https://hub.docker.com/', 'dockerhub') {
         def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
         customImage.push()
       }
@@ -33,8 +33,8 @@ node {
     //    }
 
   }
-    catch (err) {
-        currentBuild.result = "FAILURE"
-        throw err
-    }
+  catch (err) {
+    currentBuild.result = "FAILURE"
+    throw err
+  }
 }
