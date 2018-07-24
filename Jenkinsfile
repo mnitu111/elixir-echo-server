@@ -36,6 +36,17 @@ node {
       }
     }
 
+    stage('Smoke Test Stage') {
+      try {
+        def output = sh (returnStdout: true, script: "exec 3<>/dev/tcp/${STAGE_SWARM_MANAGER}/6000; echo -ne \"test\" >&3; timeout 1 cat <&3")
+        if (output == "test")
+          echo 'SUCCESS'
+        else {
+          echo 'FAILURE'
+        }
+      }
+    }
+
     stage('Production') {
       node {
         //label 'prod'
