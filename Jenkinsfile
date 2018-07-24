@@ -42,19 +42,24 @@ node {
         timeout(time: 1, unit: 'HOURS') {
           input(message: 'Shall we deploy to Production?', submitter: 'admin')
         }
-        echo "proceeding"
-        // try {
-        //   sh """
-        //     ssh docker@${PROD_SWARM_MANAGER} "docker service create \
-        //     --name=ees \
-        //     --publish=6000:6000 \
-        //     scretu/elixir-echo-server:${env.BUILD_ID}"
-        //     """
-        //   }
-        // }
-        // catch () {
-        //
-        // }
+        try {
+          sh """
+            ssh -o StrictHostKeyChecking=no -i /var/jenkins_home/id_rsa docker@${PROD_SWARM_MANAGER} \
+            "docker service create \
+            --name=ees \
+            --publish=6000:6000 \
+            scretu/elixir-echo-server:${env.BUILD_ID}"
+            """
+        }
+        catch (Exception e) {
+          print e
+          sh """
+            ssh -o StrictHostKeyChecking=no -i /var/jenkins_home/id_rsa docker@${PROD_SWARM_MANAGER} \
+            "docker service update \
+            --image scretu/elixir-echo-server:${env.BUILD_ID} \
+            ees"
+            """
+        }
       }
     }
     //    stage('Cleanup'){
