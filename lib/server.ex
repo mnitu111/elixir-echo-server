@@ -1,4 +1,8 @@
 defmodule Echo.Server do
+  def square(x) do
+    x * x
+  end
+
   def penultimate(list) do
     case list do
       [] -> nil
@@ -9,7 +13,7 @@ defmodule Echo.Server do
   end
 
   def start(port) do
-    tcp_options = [:binary, {:packet, 0}, {:active, false}]
+    tcp_options = [:list, {:packet, 0}, {:active, false}]
     {:ok, socket} = :gen_tcp.listen(port, tcp_options)
     listen(socket)
   end
@@ -23,12 +27,8 @@ defmodule Echo.Server do
   defp recv(conn) do
     case :gen_tcp.recv(conn, 0) do
       {:ok, data} ->
-        if is_list(data) do
-          :gen_tcp.send(conn, penultimate(data))
-        else
-          :gen_tcp.send(conn, IO.inspect(data))
-        end
-
+        :gen_tcp.send(conn, square(data))
+        :gen_tcp.send(conn, penultimate(data))
         recv(conn)
 
       {:error, :closed} ->
