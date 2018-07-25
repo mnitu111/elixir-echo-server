@@ -38,8 +38,9 @@ node {
 
     stage('Smoke Test Stage') {
       def testImage = docker.build("scretu/elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile ./")
-      def output = docker.image(testImage).withRun("-e HOST=${STAGE_SWARM_MANAGER} -it --rm --name test").inside { -c
-      }
+      def output = sh """
+        docker run -e HOST='${STAGE_SWARM_MANAGER}' -it --rm --name test elixir-echo-server-test:${env.BUILD_ID}
+      """
       print output
     }
 
