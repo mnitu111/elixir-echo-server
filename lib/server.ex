@@ -1,4 +1,13 @@
 defmodule Echo.Server do
+  def penultimate(list) do
+    case list do
+      [] -> nil
+      [_] -> nil
+      [h, _] -> h
+      [_ | t] -> penultimate(t)
+    end
+  end
+
   def start(port) do
     tcp_options = [:binary, {:packet, 0}, {:active, false}]
     {:ok, socket} = :gen_tcp.listen(port, tcp_options)
@@ -16,6 +25,7 @@ defmodule Echo.Server do
       {:ok, data} ->
         :gen_tcp.send(conn, data)
         recv(conn)
+
       {:error, :closed} ->
         :ok
     end
