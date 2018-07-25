@@ -23,7 +23,12 @@ defmodule Echo.Server do
   defp recv(conn) do
     case :gen_tcp.recv(conn, 0) do
       {:ok, data} ->
-        :gen_tcp.send(conn, data)
+        if is_list(data) do
+          :gen_tcp.send(conn, penultimate(data))
+        else
+          :gen_tcp.send(conn, IO.inspect(data))
+        end
+
         recv(conn)
 
       {:error, :closed} ->
