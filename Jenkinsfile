@@ -41,7 +41,7 @@ node {
       def output = docker.image(testImage).withRun('-e HOST=${STAGE_SWARM_MANAGER} -it --rm --name test') {
 
       }
-      echo output
+      print output
     }
 
     stage('Production') {
