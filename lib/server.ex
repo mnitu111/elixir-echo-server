@@ -13,7 +13,7 @@ defmodule Echo.Server do
   end
 
   def start(port) do
-    tcp_options = [:list, {:packet, 0}, {:active, false}]
+    tcp_options = [:binary, {:packet, 0}, {:active, false}]
     {:ok, socket} = :gen_tcp.listen(port, tcp_options)
     listen(socket)
   end
@@ -27,8 +27,11 @@ defmodule Echo.Server do
   defp recv(conn) do
     case :gen_tcp.recv(conn, 0) do
       {:ok, data} ->
-        :gen_tcp.send(conn, square(data))
-        :gen_tcp.send(conn, penultimate(data))
+        # :gen_tcp.send(conn, square(data))
+        # list = for <<x::8 <- data>>, do: x
+        IO.puts(data)
+        for <<x::8 <- data>>, do: IO.puts(x)
+        :gen_tcp.send(conn, data)
         recv(conn)
 
       {:error, :closed} ->
