@@ -1,0 +1,4 @@
+FROM alpine:latest
+ARG HOST
+ENV HOST ${HOST:-localhost}
+CMD ["sh", "-c", "echo \"test\" | nc -w1 $HOST 6000"]

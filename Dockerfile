@@ -1,3 +1,3 @@
 FROM elixir:slim
 COPY . .
-CMD mix start
+CMD ["mix", "start"]

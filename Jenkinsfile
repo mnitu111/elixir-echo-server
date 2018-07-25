@@ -37,12 +37,11 @@ node {
     }
 
     stage('Smoke Test Stage') {
-      def output = sh (returnStdout: true, script: "exec 3<>/dev/tcp/${STAGE_SWARM_MANAGER}/6000; echo -ne \"test\" >&3; timeout 1 cat <&3")
-      if (output == "test")
-        echo 'SUCCESS'
-      else {
-        echo 'FAILURE'
+      def testImage = docker.build("scretu/elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile")
+      def output = docker.image(testImage).withRun('-e HOST=${STAGE_SWARM_MANAGER} -it --rm --name test') {
+
       }
+      echo output
     }
 
     stage('Production') {
