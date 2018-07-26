@@ -59,15 +59,16 @@ On Linux run
 
 On Windows, with Hyper-V
 
-*   Configure networking first: https://docs.docker.com/machine/drivers/hyper-v/#2-set-up-a-new-external-network-switch-optional
+-   Configure networking first: <https://docs.docker.com/machine/drivers/hyper-v/#2-set-up-a-new-external-network-switch-optional>
 
-
+```console
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage1
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage2
 
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" prod1
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" prod2
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" prod3
+```
 
 ## Docker Swarm
 
