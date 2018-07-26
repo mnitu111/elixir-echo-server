@@ -46,7 +46,38 @@ docker run --name myjenkins -p 8080:8080 -d -v jenkins_home:/var/jenkins_home ge
 
 ## Docker Machine
 
+Install VirtualBox, the run:
+```
+for n in `seq 1 2`; do docker-machine create --driver virtualbox stage$n; done
+for n in `seq 1 3`; do docker-machine create --driver virtualbox prod$n; done
+```
+
 ## Docker Swarm
+```
+export STAGE_IP=$(docker-machine ip stage1)
+echo $STAGE_IP
+docker-machine ssh stage1 "docker swarm init --advertise-addr $STAGE_IP"
+docker-machine ssh stage2 "docker swarm join --token SWMTKN-1-xxxxx $STAGE_IP:2377"
+
+docker-machine ssh stage1 "docker service create \
+  --name=viz \
+  --publish=8080:8080/tcp \
+  --constraint=node.role==manager \
+  --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+  dockersamples/visualizer"
+
+export PROD_IP=$(docker-machine ip prod1)
+echo $PROD_IP
+docker-machine ssh prod1 "docker swarm init --advertise-addr $PROD_IP"
+
+docker-machine ssh prod1 "docker service create \
+  --name=viz \
+  --publish=8080:8080/tcp \
+  --constraint=node.role==manager \
+  --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+  dockersamples/visualizer"
+```
+
 ## Echo server in Elixir
 
 ```
