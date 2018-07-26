@@ -59,7 +59,7 @@ On Linux run
 
 On Windows, with Hyper-V
 
--   Configure
+*   Configure networking first: https://docs.docker.com/machine/drivers/hyper-v/#2-set-up-a-new-external-network-switch-optional
 
 
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage1
@@ -187,4 +187,4 @@ Running against one of the IPs of the current machine:
 
 Running against another server:
 
-    docker run -e HOST='another server's IP' --rm --name test test:latest
+    docker run -e HOST="another server's IP" --rm --name test test:latest
