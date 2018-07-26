@@ -60,6 +60,7 @@ node {
       node {
         //label 'prod'
         timeout(time: 1, unit: 'HOURS') {
+          // this only works if you're the user "admin"
           input(message: 'Shall we deploy to Production?', submitter: 'admin')
         }
         try {
@@ -82,17 +83,16 @@ node {
         }
       }
     }
-    //    stage('Cleanup'){
-    //      echo 'prune and cleanup'
-    //      sh 'npm prune'
-    //      sh 'rm node_modules -rf'
-    //
-    //      mail body: 'project build successful',
-    //                  from: 'xxxx@yyyyy.com',
-    //                  replyTo: 'xxxx@yyyy.com',
-    //                  subject: 'project build successful',
-    //                  to: 'yyyyy@yyyy.com'
-    //    }
+
+    stage('Smoke Test Production') {
+      docker.build("elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile ./")
+      testOutput = sh (
+        script: "docker run -e HOST='${PROD_SWARM_MANAGER}' --rm --name test elixir-echo-server-test:${env.BUILD_ID}",
+        returnStdout: true
+      ).trim()
+      if (testOutput != 'test')
+        error("Build failed because the output should have been \"test\", but it was " + testOutput + " instead")
+    }
 
   }
   catch (err) {
