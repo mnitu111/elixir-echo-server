@@ -1,6 +1,4 @@
-# Echo server in Elixir
-
-# CI/CD Pipeline
+# Echo server in Elixir used in a CI/CD Pipeline
 
 ## CI
 
@@ -96,9 +94,24 @@ On Windows, with Hyper-V
       --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
       dockersamples/visualizer"
 
+## Allow Jenkins to connect to Swarm managers
+
+On the host, exec into the Jenkins container and create an SSH key pair
+
+    docker exec -it myjenkins bash
+
+Run this in the Jenkins container:
+
+    ssh-keygen -f /var/jenkins_home/id_rsa -q -N ""
+
+Exit the container and now run:
+
+    docker-machine ssh stage1 "echo `docker exec myjenkins cat /var/jenkins_home/id_rsa.pub` >> .ssh/authorized_keys"
+    docker-machine ssh prod1 "echo `docker exec myjenkins cat /var/jenkins_home/id_rsa.pub` >> .ssh/authorized_keys"
+
 ## Echo server in Elixir
 
-## TCP Server
+### TCP Server
 
 There is a Erlang module called gen_tcp that we'll use to for communicating
 with TCP sockets.
@@ -139,7 +152,7 @@ defp recv(conn) do
 end
 ```
 
-## Running on the console
+### Running on the console
 
 To run this open a console and start the server.
 
@@ -148,30 +161,30 @@ To run this open a console and start the server.
 
 The `-S mix` options will load your project into the current session.
 
+#### In Docker
+
+    docker build -t ees -f Dockerfile .
+    docker run --rm --name ees -p 6000:6000 ees:latest
+
 Connect using telnet or netcat and try it out.
 
-## Automating tasks
-
-Create a `lib/tasks.ex` file and a module called `Mix.Tasks.Start`. The
-`run` function will be called by mix when we invoke the task.
-
-```elixir
-def run(_) do
-  Echo.Server.start(6000)
-end
-```
-
-Compile your app and start the server
-
-    $ mix compile
-    $ mix start
-
-or
-
-    $ mix do compile, start
-
-## Unit tests
+### Unit tests
 
     $ mix test
 
-## Run
+#### In Docker
+
+    docker build -t unit -f unit-Dockerfile .
+    docker run --rm --name unit unit:latest
+
+#### Running the smoke tests against a running server
+
+    docker build -t test -f test-Dockerfile .
+
+Running against one of the IPs of the current machine:
+
+    docker run -e HOST=`hostname -I | cut -d' ' -f1` --rm --name test test:latest
+
+Running against another server:
+
+    docker run -e HOST='another server's IP' --rm --name test test:latest
