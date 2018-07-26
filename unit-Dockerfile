@@ -1,0 +1,3 @@
+FROM elixir:slim
+COPY . .
+CMD ["mix", "test"]

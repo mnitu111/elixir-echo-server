@@ -7,6 +7,16 @@ node {
       checkout scm
     }
 
+    stage('Unit Test') {
+      docker.build("elixir-echo-server-unit:${env.BUILD_ID}", "-f unit-Dockerfile ./")
+      unitOutput = sh (
+        script: "docker run --rm --name unit elixir-echo-server-unit:${env.BUILD_ID}",
+        returnStdout: true
+      )
+      if (!unitOutput.contains('0 failures'))
+        error("Build failed because of:" unitOutput)
+    }
+
     stage('Build Docker') {
       docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub') {
         def customImage = docker.build("scretu/elixir-echo-server:${env.BUILD_ID}")
