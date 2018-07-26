@@ -38,10 +38,11 @@ node {
 
     stage('Smoke Test Stage') {
       def testImage = docker.build("elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile ./")
-      def output = sh """
-        docker run -e HOST='${STAGE_SWARM_MANAGER}' --rm --name test elixir-echo-server-test:${env.BUILD_ID}
-        """
-      print output
+      testOutput = sh (
+        script: "docker run -e HOST='${STAGE_SWARM_MANAGER}' --rm --name test elixir-echo-server-test:${env.BUILD_ID}"
+        returnStdout: true
+      )
+      print testOutput
     }
 
     stage('Production') {
