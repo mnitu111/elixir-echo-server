@@ -96,6 +96,8 @@ On Windows, with Hyper-V
     export PROD_IP=$(docker-machine ip prod1)
     echo $PROD_IP
     docker-machine ssh prod1 "docker swarm init --advertise-addr $PROD_IP"
+    docker-machine ssh prod2 "docker swarm join --token SWMTKN-1-xxxxx $PROD_IP:2377"
+    docker-machine ssh prod3 "docker swarm join --token SWMTKN-1-xxxxx $PROD_IP:2377"
 
     docker-machine ssh prod1 "docker service create \
       --name=viz \
