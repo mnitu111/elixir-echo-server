@@ -39,6 +39,11 @@ docker build -t myjenkins -f jenkins-Dockerfile .
 docker run --name myjenkins -p 8080:8080 -u root -d -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock myjenkins:latest
 ```
 
+For Windows?
+```
+docker run --name myjenkins -p 8080:8080 -d -v jenkins_home:/var/jenkins_home getintodevops/jenkins-withdocker:lts
+```
+
 ## Docker Machine
 
 ## Docker Swarm
