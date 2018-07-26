@@ -1,6 +1,48 @@
 # Echo server in Elixir
+# CI/CD Pipeline
 
-## Create the project
+## CI
+Continuous integration
+Developers practicing continuous integration merge their changes back to the main branch as often as possible. The developer's changes are validated by creating a build and running automated tests against the build. By doing so, you avoid the integration hell that usually happens when people wait for release day to merge their changes into the release branch.
+
+## CD as Continuous delivery
+Continuous delivery is an extension of continuous integration to make sure that you can release new changes to your customers quickly in a sustainable way. This means that on top of having automated your testing, you also have automated your release process and you can deploy your application at any point of time by clicking on a button.
+
+## CD as Continuous deployment
+Continuous deployment goes one step further than continuous delivery. With this practice, every change that passes all stages of your production pipeline is released to your customers. There's no human intervention, and only a failed test will prevent a new change to be deployed to production.
+
+## Pics or it didn't happen
+![CD CI](https://wac-cdn.atlassian.com/dam/jcr:84fa9fcf-4ad0-4417-96d3-e5d3387d7f81/CDmicro-600x338-retina2x-B_cicds.png?cdnVersion=ji)
+[Source](https://www.atlassian.com/continuous-delivery/ci-vs-ci-vs-cd)
+
+# Workshop
+
+## CI / CD tools
+[Bamboo](https://www.atlassian.com/software/bamboo)
+
+[Travis CI](https://travis-ci.org/)
+
+[Circle CI](https://circleci.com/)
+
+[Team City](https://www.jetbrains.com/teamcity/)
+
+[Jenkins](https://jenkins.io/)
+
+## Jenkins
+```
+docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+```
+Even better:
+```
+docker build -t myjenkins -f jenkins-Dockerfile .
+
+docker run --name myjenkins -p 8080:8080 -u root -d -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock myjenkins:latest
+```
+
+## Docker Machine
+
+## Docker Swarm
+## Echo server in Elixir
 
 ```
 mix new echo --bare  
@@ -75,7 +117,13 @@ $ mix compile
 $ mix start
 ```
 
-or 
+or
 ```
 $ mix do compile, start
+```
+
+## Unit tests
+
+```
+$ mix test
 ```
