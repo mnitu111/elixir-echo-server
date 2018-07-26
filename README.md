@@ -38,30 +38,38 @@ etc
 
 On Linux
 
+```sh
     docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+```
 
 Even better
 
+```sh
     docker build -t myjenkins -f jenkins-Dockerfile .
 
     docker run --name myjenkins -p 8080:8080 -u root -d -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock myjenkins:latest
+```
 
 On Windows
 
+```sh
     docker run --name myjenkins -p 8080:8080 -d -v jenkins_home:/var/jenkins_home getintodevops/jenkins-withdocker:lts
+```
 
 ## Docker Machine
 
 On Linux run
 
+```sh
     for n in `seq 1 2`; do docker-machine create --driver virtualbox stage$n; done
     for n in `seq 1 3`; do docker-machine create --driver virtualbox prod$n; done
+```
 
 On Windows, with Hyper-V
 
 -   Configure networking first: <https://docs.docker.com/machine/drivers/hyper-v/#2-set-up-a-new-external-network-switch-optional>
 
-```console
+```sh
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage1
     docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage2
 
@@ -72,6 +80,7 @@ On Windows, with Hyper-V
 
 ## Docker Swarm
 
+```sh
     export STAGE_IP=$(docker-machine ip stage1)
     echo $STAGE_IP
     docker-machine ssh stage1 "docker swarm init --advertise-addr $STAGE_IP"
@@ -94,21 +103,28 @@ On Windows, with Hyper-V
       --constraint=node.role==manager \
       --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
       dockersamples/visualizer"
+```
 
 ## Allow Jenkins to connect to Swarm managers
 
 On the host, exec into the Jenkins container and create an SSH key pair
 
+```sh
     docker exec -it myjenkins bash
+```
 
 Run this in the Jenkins container:
 
+```sh
     ssh-keygen -f /var/jenkins_home/id_rsa -q -N ""
+```
 
 Exit the container and now run:
 
+```sh
     docker-machine ssh stage1 "echo `docker exec myjenkins cat /var/jenkins_home/id_rsa.pub` >> .ssh/authorized_keys"
     docker-machine ssh prod1 "echo `docker exec myjenkins cat /var/jenkins_home/id_rsa.pub` >> .ssh/authorized_keys"
+```
 
 ## Echo server in Elixir
 
@@ -157,35 +173,49 @@ end
 
 To run this open a console and start the server.
 
+```sh
     $ iex -S mix
     iex> Echo.Server.start(6000)
+```
 
 The `-S mix` options will load your project into the current session.
 
 #### In Docker
 
+```sh
     docker build -t ees -f Dockerfile .
     docker run --rm --name ees -p 6000:6000 ees:latest
+```
 
 Connect using telnet or netcat and try it out.
 
 ### Unit tests
 
+```sh
     $ mix test
+```
 
 #### In Docker
 
+```sh
     docker build -t unit -f unit-Dockerfile .
     docker run --rm --name unit unit:latest
+```
 
 #### Running the smoke tests against a running server
 
+```sh
     docker build -t test -f test-Dockerfile .
+```
 
 Running against one of the IPs of the current machine:
 
+```sh
     docker run -e HOST=`hostname -I | cut -d' ' -f1` --rm --name test test:latest
+```
 
 Running against another server:
 
+```sh
     docker run -e HOST="another server's IP" --rm --name test test:latest
+```
