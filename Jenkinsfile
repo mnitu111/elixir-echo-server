@@ -14,7 +14,7 @@ node {
         returnStdout: true
       )
       if (!unitOutput.contains('0 failures'))
-        error("Build failed because of:" unitOutput)
+        error("Build failed because of:" + unitOutput)
     }
 
     stage('Build Docker') {
