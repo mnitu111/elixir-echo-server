@@ -105,6 +105,10 @@ On Windows, with Hyper-V
       dockersamples/visualizer"
 ```
 
+### Test the Swarms
+
+Open a browser and point it to <http://$STAGE_IP:8080> and <http://$PROD_IP:8080> respectively
+
 ## Allow Jenkins to connect to Swarm managers
 
 On the host, exec into the Jenkins container and create an SSH key pair
@@ -219,3 +223,16 @@ Running against another server:
 ```sh
     docker run -e HOST="another server's IP" --rm --name test test:latest
 ```
+
+## Jenkins Pipeline
+
+-   Create a Pipeline job in Jenkins with
+-   GitHub project <https://github.com/scretu/elixir-echo-server/>
+-   2 build parameters: STAGE_SWARM_MANAGER and PROD_SWARM_MANAGER pointing to $STAGE_IP and $PROD_IP respectively
+-   Definition: Pipeline script from SCM, where SCM is Git and Repository is <https://github.com/scretu/elixir-echo-server> and branch is `master`
+-   It should look like this
+    ![Jenkins1](Screenshot_Jenkins1.png)
+    ![Jenkins2](Screenshot_Jenkins2.png)
+-   Once you run the Pipeline, it should look like this:
+    ![Jenkins3](Screenshot_Jenkins3.png)
+-   But you will have to configure the Docker Hub credentials (see Pipeline stage `Build Docker`)
