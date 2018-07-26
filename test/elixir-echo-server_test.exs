@@ -6,6 +6,6 @@ defmodule EchoTest do
   end
 
   test "echo" do
-    assert send_msg(self(), "bla") == "bla"
+    assert send_msg(self(), "bla") == "fail"
   end
 end
