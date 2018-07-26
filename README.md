@@ -52,6 +52,12 @@ for n in `seq 1 2`; do docker-machine create --driver virtualbox stage$n; done
 for n in `seq 1 3`; do docker-machine create --driver virtualbox prod$n; done
 ```
 
+On Windows, with Hyper-V:
+```
+docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage1
+docker-machine create --driver hyperv --hyperv-virtual-switch "Primary Virtual Switch" stage2
+```
+
 ## Docker Swarm
 ```
 export STAGE_IP=$(docker-machine ip stage1)
