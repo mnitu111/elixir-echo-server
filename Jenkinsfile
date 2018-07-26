@@ -14,7 +14,7 @@ node {
         returnStdout: true
       )
       if (!unitOutput.contains('0 failures'))
-        error("Build failed because of:" + unitOutput)
+        error("Build failed because of: " + unitOutput)
     }
 
     stage('Build Docker') {
@@ -47,12 +47,13 @@ node {
     }
 
     stage('Smoke Test Stage') {
-      def testImage = docker.build("elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile ./")
+      docker.build("elixir-echo-server-test:${env.BUILD_ID}", "-f test-Dockerfile ./")
       testOutput = sh (
         script: "docker run -e HOST='${STAGE_SWARM_MANAGER}' --rm --name test elixir-echo-server-test:${env.BUILD_ID}",
         returnStdout: true
       )
-      print testOutput
+      if (testOutput != 'test'))
+        error("Build failed because the output should have been " + testOutput)
     }
 
     stage('Production') {
