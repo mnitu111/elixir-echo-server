@@ -2,7 +2,6 @@
 
 ## CI
 
-Continuous integration
 Developers practicing continuous integration merge their changes back to the main branch as often as possible. The developer's changes are validated by creating a build and running automated tests against the build. By doing so, you avoid the integration hell that usually happens when people wait for release day to merge their changes into the release branch.
 
 ## CD as Continuous delivery
@@ -36,13 +35,7 @@ etc
 
 ## Jenkins
 
-On Linux
-
-```sh
-    docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
-```
-
-Even better
+On Linux, in order to launch a Jenkins instance that can run Docker, you need to build it based on this custom Dockerfile:
 
 ```sh
     docker build -t myjenkins -f jenkins-Dockerfile .
@@ -50,11 +43,13 @@ Even better
     docker run --name myjenkins -p 8080:8080 -u root -d -v jenkins_home:/var/jenkins_home -v $(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock myjenkins:latest
 ```
 
-On Windows
+On Windows you'll launch a Jenkins instance that has Docker in it:
 
 ```sh
     docker run --name myjenkins -p 8080:8080 -d -v jenkins_home:/var/jenkins_home getintodevops/jenkins-withdocker:lts
 ```
+
+You might have to update and/or install some plugins in this Jenkins instance for Docker and Pipelines to work.
 
 ## Docker Machine
 
