@@ -11,7 +11,7 @@ node {
       node {
         try {
           sh """
-            helm install prod ees-chart
+            helm install prod ./ees-chart
             """
         }
         catch (Exception e) {
