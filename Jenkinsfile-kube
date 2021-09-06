@@ -8,15 +8,13 @@ node {
     }
 
     stage('Production') {
-      node {
-        try {
-          sh """
-            helm upgrade --install prod /var/jenkins_home/workspace/ees-kube/ees-chart
-            """
-        }
-        catch (Exception e) {
-          print e
-        }
+      try {
+        sh """
+          helm upgrade --install prod ./ees-chart
+          """
+      }
+      catch (Exception e) {
+        print e
       }
     }
 
