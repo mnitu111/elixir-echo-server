@@ -11,6 +11,7 @@ node {
       node {
         try {
           sh """
+            pwd
             helm install prod ./ees-chart
             """
         }
