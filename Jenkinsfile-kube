@@ -1,0 +1,37 @@
+#!groovy
+
+node {
+  currentBuild.result = "SUCCESS"
+  try {
+    stage('Checkout') {
+      checkout scm
+    }
+
+    stage('Production') {
+      node {
+        try {
+          sh """
+            helm install prod ees-chart
+            """
+        }
+        catch (Exception e) {
+          print e
+        }
+      }
+    }
+
+    stage('Smoke Test Production') {
+      testOutput = sh (
+        script: "echo test | nc -w1 192.168.49.2 6000",
+        returnStdout: true
+      ).trim()
+      if (testOutput != 'test')
+        error("Build failed because the output should have been \"test\", but it was " + testOutput + " instead")
+    }
+
+  }
+  catch (err) {
+    currentBuild.result = "FAILURE"
+    throw err
+  }
+}
