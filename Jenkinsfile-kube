@@ -22,7 +22,7 @@ node {
 
     stage('Smoke Test Production') {
       testOutput = sh (
-        script: "echo test | nc -w1 192.168.49.2 6000",
+        script: "export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services prod-ees-chart) $$ echo test | nc -w1 192.168.49.2 $NODE_PORT",
         returnStdout: true
       ).trim()
       if (testOutput != 'test')
