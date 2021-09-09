@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: mnitu/elixir:latest
+  repository: mnitu/elixir
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "7"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
